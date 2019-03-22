@@ -1,17 +1,17 @@
 package IntroToProgLab;
 
-public class Bucket<T> {
+public class Bucket <MyEntry> {
     private Node first;
     private Node last;
-    private int N;
+    private int size;
 
-    public Bucket() {
+    Bucket() {
         first = null;
         last = null;
-        N = 0;
+        size = 0;
     }
 
-    public void add(T item) {
+    void add(MyEntry item) {
         if (item == null) {
             throw new NullPointerException("The first argument for addLast() is null.");
         }
@@ -23,43 +23,42 @@ public class Bucket<T> {
             last = new Node(item, null);
             first = last;
         }
-        N++;
+        size++;
     }
-    public T get(int index){
-        Node node=new Node();
-        if(index==0){
+    MyEntry get(int index) {
+        Node node = new Node();
+        if (index == 0){
             return first.data;
         }
         for (int i = 0; i < index; i++) {
-            node=first.next;
+            node = first.next;
         }
         return node.data;
     }
 
-
-    public int size() {
-        return N;
-    }
-
-    public boolean isEmpty() {
-        return N == 0;
-    }
-
-    private class Node {
-        private T data;
-        private Node next;
-
-        public Node(T data, Node next) {
+    class Node {
+        MyEntry data;
+        Node next;
+        Node(MyEntry data, Node next) {
             this.data = data;
             this.next = next;
         }
-        public Node(){
+
+        Node(){
 
         }
     }
 
+    int size() {
+        return size;
+    }
+
+    private boolean isEmpty() {
+        return size == 0;
+    }
+
     public static void main(String[] args) {
-        Bucket<String> linkedList=new Bucket<>();
+        Bucket <String> linkedList = new Bucket<>();
         linkedList.add("Hello");
         linkedList.add("World");
         System.out.println(linkedList.get(0));
