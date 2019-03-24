@@ -23,9 +23,7 @@ final class MyEntry <K, V> implements Map.Entry <K, V> {
 
     @Override
     public V setValue(V value) {
-        V old = this.value;
-        this.value = value;
-        return old;
+        return this.value=value;
     }
 
 }

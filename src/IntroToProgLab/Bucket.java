@@ -1,6 +1,6 @@
 package IntroToProgLab;
 
-public class Bucket <MyEntry> {
+public class Bucket<MyEntry> {
     private Node first;
     private Node last;
     private int size;
@@ -25,26 +25,29 @@ public class Bucket <MyEntry> {
         }
         size++;
     }
+
     MyEntry get(int index) {
         Node node = new Node();
-        if (index == 0){
+        if (index == 0) {
             return first.data;
         }
         for (int i = 0; i < index; i++) {
             node = first.next;
         }
+        size--;
         return node.data;
     }
 
     class Node {
         MyEntry data;
         Node next;
+
         Node(MyEntry data, Node next) {
             this.data = data;
             this.next = next;
         }
 
-        Node(){
+        Node() {
 
         }
     }
@@ -55,13 +58,14 @@ public class Bucket <MyEntry> {
 
     private boolean isEmpty() {
         return size == 0;
+
     }
 
     public static void main(String[] args) {
-        Bucket <String> linkedList = new Bucket<>();
-        linkedList.add("Hello");
-        linkedList.add("World");
-        System.out.println(linkedList.get(0));
-    }
+        Bucket bucket=new Bucket();
+        bucket.add("fe");
+        bucket.get(0);
+     }
+
 }
 
