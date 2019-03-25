@@ -1,7 +1,12 @@
 package IntroToProgLab;
 
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Scanner;
+
 public class HashMap<K, V> {
-    private final int DEFAULT_CAPACITY = 16;
+    private int DEFAULT_CAPACITY = 16;
     private Bucket<MyEntry<K, V>>[] arrayOfIndexes;
 
     public HashMap(int size) {
@@ -16,42 +21,61 @@ public class HashMap<K, V> {
 
     public void inputArrayOfBuckets() {
         for (int itter = 0; itter < arrayOfIndexes.length; itter++) {
-            Bucket bucket = new Bucket();
-            arrayOfIndexes[itter] = bucket;
+            if (arrayOfIndexes[itter] != null) {
+                continue;
+            } else {
+                Bucket bucket = new Bucket();
+                arrayOfIndexes[itter] = bucket;
+            }
+        }
+    }
+
+    public void inputArrayOfBuckets(Bucket<MyEntry<K, V>>[] array) {
+        for (int itter = 0; itter < array.length; itter++) {
+            if (array[itter] != null) {
+                continue;
+            } else {
+                Bucket bucket = new Bucket();
+                array[itter] = bucket;
+            }
         }
     }
 
     public void put(K key, V value) {
         MyEntry<K, V> myEntry = new MyEntry<>(key, value);
         int ind = index(key);
-        if (arrayOfIndexes[ind].size() == 0) {
-            arrayOfIndexes[ind].add(myEntry);
-            return;
-        } else {
-            for (int itter = 0; itter < arrayOfIndexes[ind].size(); itter++) {
-                if (!myEntry.getKey().equals(arrayOfIndexes[ind].get(itter).getKey())) {
-                    if (hashCode(myEntry.getKey()) == hashCode(arrayOfIndexes[ind].get(itter).getKey())) {
-                        System.out.println("collision add linked list");
-                        arrayOfIndexes[ind].add(myEntry);
-                    }
-                } else {
-                    System.out.println("Error:similar keys");
-                    System.exit(-1);
-                }
-            }
-        }
+        arrayOfIndexes[ind].add(myEntry);
+
     }
 
     V get(K key) {
-        for (int itter = 0; itter < arrayOfIndexes.length; itter++) {
-            for (int x = 0; x < arrayOfIndexes[itter].size(); x++) {
-                MyEntry<K, V> myEntry = arrayOfIndexes[itter].get(x);
-                if (key.equals(myEntry.getKey())) {
-                    return arrayOfIndexes[index(key)].get(x).getValue();
-                }
+        int ind = index(key);
+        for (int x = 0; x < arrayOfIndexes[ind].size(); x++) {
+            MyEntry<K, V> myEntry = arrayOfIndexes[ind].get(x);
+            if (key.equals(myEntry.getKey())) {
+                return arrayOfIndexes[index(key)].get(x).getValue();
             }
         }
         return null;
+    }
+
+    public boolean checkToCopyArray(Bucket<MyEntry<K, V>>[] array) {
+        int counter = 0;
+        for (int itter = 0; itter < array.length; itter++) {
+            if (array[itter].size() >= 1) {
+                counter++;
+            }
+        }
+        if (array.length / counter >= 0.8) {
+            return true;
+        }
+        return false;
+    }
+
+    public void recopyArray(Bucket<MyEntry<K, V>>[] array, HashMap<K, V> hashMap) {
+        Bucket<MyEntry<K, V>>[] arrayOfBuckets = (Bucket<MyEntry<K, V>>[]) new Bucket[array.length * 2];
+        arrayOfBuckets = array;
+        hashMap.inputArrayOfBuckets(array);
     }
 
     public int hashCode(K word) {
@@ -69,9 +93,15 @@ public class HashMap<K, V> {
 
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return this == obj;
-    }
 
+    public void inputVocabular(String file, HashMap<String, String> hashMap) throws FileNotFoundException {
+        try (final Scanner reader = new Scanner(new FileReader(file))) {
+            while (reader.hasNextLine()) {
+                String line = reader.nextLine();
+                String[] buffer = line.split(";");
+                hashMap.put(buffer[0], buffer[1]);
+            }
+        }
+    }
 }
+

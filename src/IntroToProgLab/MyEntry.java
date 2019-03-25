@@ -3,12 +3,15 @@ package IntroToProgLab;
 import java.util.Map;
 
 final class MyEntry <K, V> implements Map.Entry <K, V> {
-    private final K key;
+    private K key;
     private V value;
 
     MyEntry(K key, V value) {
         this.key = key;
         this.value = value;
+    }
+    public MyEntry(){
+
     }
 
     @Override

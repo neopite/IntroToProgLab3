@@ -1,8 +1,21 @@
 package IntroToProgLab;
 
-public class Main{
-    public static void main(String[] args) {
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class Main {
+    final static String file = "/home/yarik/IdeaProjects/IntroToProgLab3/src/dict.processed.txt";
+
+    public static void main(String[] args) throws FileNotFoundException {
+        Scanner scanner = new Scanner(System.in);
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.inputArrayOfBuckets();
+        hashMap.inputVocabular(file, hashMap);
+        System.out.println("Enter a sentence:");
+        String line = scanner.nextLine();
+        String[] buffer = line.split(" ");
+        for (int itter = 0; itter < buffer.length; itter++) {
+            System.out.println(hashMap.get(buffer[itter]));
+        }
     }
 }

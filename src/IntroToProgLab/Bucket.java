@@ -3,11 +3,13 @@ package IntroToProgLab;
 public class Bucket<MyEntry> {
     private Node first;
     private Node last;
+    private Node prev;
     private int size;
 
     Bucket() {
         first = null;
         last = null;
+        prev = null;
         size = 0;
     }
 
@@ -17,10 +19,11 @@ public class Bucket<MyEntry> {
         }
         if (!isEmpty()) {
             Node prev = last;
-            last = new Node(item, null);
-            prev.next = last;
+            last = new Node(item, null, prev);
+            prev.setNext(last);
+
         } else {
-            last = new Node(item, null);
+            last = new Node(item, null, null);
             first = last;
         }
         size++;
@@ -28,27 +31,42 @@ public class Bucket<MyEntry> {
 
     MyEntry get(int index) {
         Node node = new Node();
-        if (index == 0) {
-            return first.data;
-        }
+        node = last;
         for (int i = 0; i < index; i++) {
-            node = first.next;
+            node = node.getPrev();
         }
-        size--;
         return node.data;
     }
 
     class Node {
         MyEntry data;
         Node next;
+        Node prev;
 
-        Node(MyEntry data, Node next) {
+        Node(MyEntry data, Node next, Node prev) {
             this.data = data;
             this.next = next;
+            this.prev = prev;
         }
 
         Node() {
 
+        }
+
+        public void setNext(Node next) {
+            this.next = next;
+        }
+
+        public Node getNext() {
+            return next;
+        }
+
+        public void setPrev(Node prev) {
+            this.prev = prev;
+        }
+
+        public Node getPrev() {
+            return prev;
         }
     }
 
@@ -61,11 +79,6 @@ public class Bucket<MyEntry> {
 
     }
 
-    public static void main(String[] args) {
-        Bucket bucket=new Bucket();
-        bucket.add("fe");
-        bucket.get(0);
-     }
-
 }
+
 
