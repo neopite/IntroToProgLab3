@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.util.Scanner;
 
 public class HashMap<K, V> {
-    private int DEFAULT_CAPACITY = 16;
     private Bucket<MyEntry<K, V>>[] arrayOfIndexes;
 
     public HashMap(int size) {
@@ -16,6 +15,7 @@ public class HashMap<K, V> {
 
     public HashMap() {
         //UNCHECKED CAST EXCEPTION POSSIBLE
+        int DEFAULT_CAPACITY = 16;
         arrayOfIndexes = (Bucket<MyEntry<K, V>>[]) new Bucket[DEFAULT_CAPACITY];
     }
 
@@ -24,24 +24,24 @@ public class HashMap<K, V> {
             if (arrayOfIndexes[itter] != null) {
                 continue;
             } else {
-                Bucket bucket = new Bucket();
+                Bucket<MyEntry<K,V>> bucket = new Bucket<MyEntry<K,V>>();
                 arrayOfIndexes[itter] = bucket;
             }
         }
     }
 
-    public void inputArrayOfBuckets(Bucket<MyEntry<K, V>>[] array) {
+    private void inputArrayOfBuckets(Bucket<MyEntry<K, V>>[] array) {
         for (int itter = 0; itter < array.length; itter++) {
             if (array[itter] != null) {
                 continue;
             } else {
-                Bucket bucket = new Bucket();
+                Bucket<MyEntry<K,V>>bucket = new Bucket<>();
                 array[itter] = bucket;
             }
         }
     }
 
-    public void put(K key, V value) {
+    private void put(K key, V value) {
         MyEntry<K, V> myEntry = new MyEntry<>(key, value);
         int ind = index(key);
         arrayOfIndexes[ind].add(myEntry);

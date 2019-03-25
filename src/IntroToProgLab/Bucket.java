@@ -65,7 +65,7 @@ public class Bucket<MyEntry> {
             this.prev = prev;
         }
 
-        public Node getPrev() {
+        private Node getPrev() {
             return prev;
         }
     }
