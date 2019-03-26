@@ -5,8 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
 
-public class HashMap<K, V> {
-    private Bucket<MyEntry<K, V>>[] arrayOfIndexes;
+public class HashMap <K, V> {
+    private Bucket <MyEntry<K, V>>[] arrayOfIndexes;
+    private int occupiedSlots;
 
     public HashMap(int size) {
         // UNCHECKED CAST EXCEPTION POSSIBLE
@@ -15,8 +16,7 @@ public class HashMap<K, V> {
 
     public HashMap() {
         //UNCHECKED CAST EXCEPTION POSSIBLE
-        int DEFAULT_CAPACITY = 16;
-        arrayOfIndexes = (Bucket<MyEntry<K, V>>[]) new Bucket[DEFAULT_CAPACITY];
+        arrayOfIndexes = (Bucket<MyEntry<K, V>>[]) new Bucket[16];
     }
 
     public void inputArrayOfBuckets() {
@@ -24,28 +24,28 @@ public class HashMap<K, V> {
             if (arrayOfIndexes[itter] != null) {
                 continue;
             } else {
-                Bucket<MyEntry<K,V>> bucket = new Bucket<MyEntry<K,V>>();
+                Bucket<MyEntry<K,V>> bucket = new Bucket <MyEntry<K,V>>();
                 arrayOfIndexes[itter] = bucket;
             }
         }
     }
 
     private void inputArrayOfBuckets(Bucket<MyEntry<K, V>>[] array) {
-        for (int itter = 0; itter < array.length; itter++) {
+        for (int itter = 0; itter < array.length - 1; itter++) {
             if (array[itter] != null) {
                 continue;
             } else {
-                Bucket<MyEntry<K,V>>bucket = new Bucket<>();
-                array[itter] = bucket;
+                Bucket<MyEntry<K,V>> bucket = new Bucket<>();
+                arrayOfIndexes[itter] = bucket;
             }
         }
     }
 
     private void put(K key, V value) {
+        if (resizeFactor(arrayOfIndexes)) expand(arrayOfIndexes, this);
         MyEntry<K, V> myEntry = new MyEntry<>(key, value);
         int ind = index(key);
         arrayOfIndexes[ind].add(myEntry);
-
     }
 
     V get(K key) {
@@ -59,23 +59,27 @@ public class HashMap<K, V> {
         return null;
     }
 
-    public boolean checkToCopyArray(Bucket<MyEntry<K, V>>[] array) {
+    public boolean resizeFactor(Bucket<MyEntry<K, V>>[] array) {
         int counter = 0;
         for (int itter = 0; itter < array.length; itter++) {
-            if (array[itter].size() >= 1) {
-                counter++;
-            }
+            if (array[itter].size() >= 1) counter++;
         }
-        if (array.length / counter >= 0.8) {
+        occupiedSlots = counter;
+        if (counter / array.length >= 0.8) {
             return true;
         }
+
         return false;
     }
 
-    public void recopyArray(Bucket<MyEntry<K, V>>[] array, HashMap<K, V> hashMap) {
+    public void expand(Bucket<MyEntry<K, V>>[] array, HashMap<K, V> hashMap) {
         Bucket<MyEntry<K, V>>[] arrayOfBuckets = (Bucket<MyEntry<K, V>>[]) new Bucket[array.length * 2];
-        arrayOfBuckets = array;
-        hashMap.inputArrayOfBuckets(array);
+        for (int itter = 0; itter < array.length; itter++) {
+            arrayOfBuckets[itter] = array[itter];
+            arrayOfIndexes[itter] = arrayOfBuckets[itter];
+        }
+
+       // hashMap.inputArrayOfBuckets(arrayOfBuckets);
     }
 
     public int hashCode(K word) {
@@ -88,11 +92,9 @@ public class HashMap<K, V> {
     }
 
     private int index(K word) {
-        int n = 16;
-        return hashCode(word) & (n - 1);
+        return hashCode(word) & (arrayOfIndexes.length - 1);
 
     }
-
 
     public void inputVocabular(String file, HashMap<String, String> hashMap) throws FileNotFoundException {
         try (final Scanner reader = new Scanner(new FileReader(file))) {

@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Main {
-    final static String file = "/home/yarik/IdeaProjects/IntroToProgLab3/src/dict.processed.txt";
+    private final static String file = "/home/ivan/IdeaProjects/IntroToProgLab3/src/dict.processed.txt";
 
     public static void main(String[] args) throws FileNotFoundException {
         Scanner scanner = new Scanner(System.in);
