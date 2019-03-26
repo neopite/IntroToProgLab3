@@ -3,82 +3,78 @@ package IntroToProgLab;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class HashMap <K, V> {
-    private Bucket <MyEntry<K, V>>[] arrayOfIndexes;
-    private int occupiedSlots;
+    private ArrayList<Bucket <MyEntry<K, V>>> arrayOfIndexes;
 
-    public HashMap(int size) {
+    /*public HashMap(int size) {
         // UNCHECKED CAST EXCEPTION POSSIBLE
         arrayOfIndexes = (Bucket<MyEntry<K, V>>[]) new Bucket[size];
-    }
+    }*/
 
     public HashMap() {
         //UNCHECKED CAST EXCEPTION POSSIBLE
-        arrayOfIndexes = (Bucket<MyEntry<K, V>>[]) new Bucket[16];
+        //arrayOfIndexes = (Bucket<MyEntry<K, V>>[]) new Bucket[16];
     }
 
     public void inputArrayOfBuckets() {
-        for (int itter = 0; itter < arrayOfIndexes.length; itter++) {
-            if (arrayOfIndexes[itter] != null) {
+        for (Bucket <MyEntry<K, V>> tempBucket : arrayOfIndexes) {
+            if (tempBucket != null) {
                 continue;
             } else {
                 Bucket<MyEntry<K,V>> bucket = new Bucket <MyEntry<K,V>>();
-                arrayOfIndexes[itter] = bucket;
+                tempBucket = bucket;
             }
         }
     }
 
     private void inputArrayOfBuckets(Bucket<MyEntry<K, V>>[] array) {
-        for (int itter = 0; itter < array.length - 1; itter++) {
-            if (array[itter] != null) {
+        for (Bucket <MyEntry<K, V>> tempBucket : arrayOfIndexes) {
+            if (tempBucket != null) {
                 continue;
             } else {
                 Bucket<MyEntry<K,V>> bucket = new Bucket<>();
-                arrayOfIndexes[itter] = bucket;
+              //  arrayOfIndexes[itter] = array[itter];
             }
         }
     }
 
     private void put(K key, V value) {
-        if (resizeFactor(arrayOfIndexes)) expand(arrayOfIndexes, this);
+        if (resizeFactor(arrayOfIndexes)) {
+            arrayOfIndexes = expand(arrayOfIndexes, this);
+        }
         MyEntry<K, V> myEntry = new MyEntry<>(key, value);
         int ind = index(key);
-        arrayOfIndexes[ind].add(myEntry);
+        arrayOfIndexes.get(ind).add(myEntry);
     }
 
     V get(K key) {
         int ind = index(key);
-        for (int x = 0; x < arrayOfIndexes[ind].size(); x++) {
-            MyEntry<K, V> myEntry = arrayOfIndexes[ind].get(x);
+        for (int x = 0; x < arrayOfIndexes.get(ind).size(); x++) {
+            MyEntry<K, V> myEntry = arrayOfIndexes.get(ind).get(x);
             if (key.equals(myEntry.getKey())) {
-                return arrayOfIndexes[index(key)].get(x).getValue();
+                return arrayOfIndexes.get(index(key)).get(x).getValue();
             }
         }
         return null;
     }
 
-    public boolean resizeFactor(Bucket<MyEntry<K, V>>[] array) {
-        int counter = 0;
-        for (int itter = 0; itter < array.length; itter++) {
-            if (array[itter].size() >= 1) counter++;
-        }
-        occupiedSlots = counter;
-        if (counter / array.length >= 0.8) {
+    public boolean resizeFactor() {
+        if (counter >= 0.8 * array.length) {
             return true;
         }
 
         return false;
     }
 
-    public void expand(Bucket<MyEntry<K, V>>[] array, HashMap<K, V> hashMap) {
+    public  Bucket<MyEntry<K, V>>[] expand(Bucket<MyEntry<K, V>>[] array, HashMap<K, V> hashMap) {
         Bucket<MyEntry<K, V>>[] arrayOfBuckets = (Bucket<MyEntry<K, V>>[]) new Bucket[array.length * 2];
         for (int itter = 0; itter < array.length; itter++) {
             arrayOfBuckets[itter] = array[itter];
-            arrayOfIndexes[itter] = arrayOfBuckets[itter];
         }
-
+        return arrayOfBuckets;
        // hashMap.inputArrayOfBuckets(arrayOfBuckets);
     }
 
@@ -92,7 +88,7 @@ public class HashMap <K, V> {
     }
 
     private int index(K word) {
-        return hashCode(word) & (arrayOfIndexes.length - 1);
+        return hashCode(word) & (arrayOfIndexes.size() - 1);
 
     }
 
