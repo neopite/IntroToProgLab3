@@ -78,7 +78,6 @@ public class Bucket<MyEntry> {
         return size == 0;
 
     }
-
 }
 
 
