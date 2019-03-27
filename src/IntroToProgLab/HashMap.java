@@ -104,7 +104,7 @@ public class HashMap <K, V> {
         return hashCode(word) & (arrayOfIndexes.length - 1);
     }
 
-    public void inputVocabular(String file, HashMap<String, String> hashMap) throws FileNotFoundException {
+    public void inputVocabulary(String file, HashMap<String, String> hashMap) throws FileNotFoundException {
         try (final Scanner reader = new Scanner(new FileReader(file))) {
             while (reader.hasNextLine()) {
                 String line = reader.nextLine();

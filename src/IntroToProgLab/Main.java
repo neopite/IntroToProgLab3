@@ -10,7 +10,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.inputArrayOfBuckets();
-        hashMap.inputVocabular(file, hashMap);
+        hashMap.inputVocabulary(file, hashMap);
         System.out.println("Enter a sentence:");
         String line = scanner.nextLine();
         String[] buffer = line.split(" ");
