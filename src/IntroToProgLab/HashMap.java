@@ -79,24 +79,16 @@ public class HashMap <K, V> {
 
     private void expand() {
         Bucket <MyEntry<K, V>>[] oldBucketArray = arrayOfIndexes;
-       // HashMap<K, V> oldMap = this;
         this.arrayOfIndexes = (Bucket<MyEntry<K, V>>[]) new Bucket[oldBucketArray.length * 2];
-        HashMap<K, V> newMap = (HashMap<K, V>) new HashMap(oldBucketArray.length * 2);
         for (Bucket<MyEntry<K, V>> oldBucket : oldBucketArray) {
             if (oldBucket == null) {
                 continue;
             }
             ArrayList<MyEntry<K, V>> entryList = oldBucket.getEntries();
             for (MyEntry<K, V> entry : entryList) {
-                newMap.put(entry.getKey(), entry.getValue());
+                this.put(entry.getKey(), entry.getValue());
             }
         }
-        /*for (Bucket<MyEntry<K, V>> bucket : newMap.arrayOfIndexes) {
-            if(bucket == null) {
-                bucket = new Bucket<>();
-            }
-        }*/
-        this.arrayOfIndexes = newMap.arrayOfIndexes;
     }
 
     public int hashCode(K word) {
