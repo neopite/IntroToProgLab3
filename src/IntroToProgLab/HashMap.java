@@ -3,10 +3,11 @@ package IntroToProgLab;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class HashMap <K, V> {
-    private Bucket <MyEntry<K, V>>[] arrayOfIndexes;
+    Bucket <MyEntry<K, V>>[] arrayOfIndexes;
 
     public HashMap(int size) {
         // UNCHECKED CAST EXCEPTION POSSIBLE
@@ -15,7 +16,7 @@ public class HashMap <K, V> {
 
     public HashMap() {
         //UNCHECKED CAST EXCEPTION POSSIBLE
-        arrayOfIndexes = (Bucket<MyEntry<K, V>>[]) new Bucket[16];
+        arrayOfIndexes = (Bucket<MyEntry<K, V>>[]) new Bucket[32];
     }
 
     public void inputArrayOfBuckets() {
@@ -41,14 +42,12 @@ public class HashMap <K, V> {
     }
 
     private void put(K key, V value) {
-        if (resizeFactor()) {
-            Bucket<MyEntry<K, V>>[] tempArray = expand();
-            arrayOfIndexes = (Bucket<MyEntry<K, V>>[]) new Bucket[arrayOfIndexes.length * 2];
-            arrayOfIndexes = tempArray;
+        if (loadFactor()) {
+            this.expand();
         }
         MyEntry<K, V> myEntry = new MyEntry<>(key, value);
         int ind = index(key);
-        System.out.println(ind);
+        System.out.println(ind + " " + arrayOfIndexes.length);
         arrayOfIndexes[ind].add(myEntry);
     }
 
@@ -63,28 +62,31 @@ public class HashMap <K, V> {
         return null;
     }
 
-    public boolean resizeFactor() {
+    private boolean loadFactor() {
         int counter = 0;
         for (Bucket<MyEntry<K, V>> bucket : arrayOfIndexes) {
             if (bucket != null && bucket.size() > 0) {
                 counter++;
             }
         }
-
-        if (counter / arrayOfIndexes.length >= 0.8) {
+        if (counter  >= 0.8 * arrayOfIndexes.length) {
             return true;
         }
-
         return false;
     }
 
-    public Bucket<MyEntry<K, V>>[] expand() {
-        Bucket<MyEntry<K, V>>[] arrayOfBuckets = (Bucket<MyEntry<K, V>>[]) new Bucket[arrayOfIndexes.length * 2];
-        for (int itter = 0; itter < arrayOfIndexes.length; itter++) {
-            arrayOfBuckets[itter] = arrayOfIndexes[itter];
+    private void expand() {
+        Bucket <MyEntry<K, V>>[] oldBucketArray = arrayOfIndexes;
+       // HashMap<K, V> oldMap = this;
+        this.arrayOfIndexes = (Bucket<MyEntry<K, V>>[]) new Bucket[oldBucketArray.length * 2];
+        HashMap<K, V> newMap = (HashMap<K, V>) new HashMap(oldBucketArray.length * 2);
+        for (Bucket<MyEntry<K, V>> oldBucket : oldBucketArray) {
+            ArrayList<MyEntry<K, V>> entryList = oldBucket.getEntries();
+            for (MyEntry<K, V> entry : entryList) {
+                newMap.put(entry.getKey(), entry.getValue());
+            }
         }
-        return arrayOfBuckets;
-       // hashMap.inputArrayOfBuckets(arrayOfBuckets);
+        this.arrayOfIndexes = newMap.arrayOfIndexes;
     }
 
     public int hashCode(K word) {

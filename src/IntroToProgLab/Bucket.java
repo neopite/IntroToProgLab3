@@ -1,5 +1,7 @@
 package IntroToProgLab;
 
+import java.util.ArrayList;
+
 public class Bucket<MyEntry> {
     private Node first;
     private Node last;
@@ -27,6 +29,20 @@ public class Bucket<MyEntry> {
             first = last;
         }
         size++;
+    }
+
+    ArrayList<MyEntry> getEntries() {
+        Bucket <MyEntry> oldBucket = this;
+        ArrayList<MyEntry> bucketEntries = (ArrayList<MyEntry>) new ArrayList(oldBucket.size());
+        Node node = new Node();
+        node = oldBucket.last;
+        for (int i = 0; i < oldBucket.size(); i++) {
+            if (node.data != null) {
+                bucketEntries.add(node.data);
+                node = node.getPrev();
+            } else continue;
+        }
+        return bucketEntries;
     }
 
     MyEntry get(int index) {
