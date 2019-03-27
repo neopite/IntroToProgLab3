@@ -47,7 +47,9 @@ public class HashMap <K, V> {
         }
         MyEntry<K, V> myEntry = new MyEntry<>(key, value);
         int ind = index(key);
-        System.out.println(ind + " " + arrayOfIndexes.length);
+        if (arrayOfIndexes[ind] == null) {
+            arrayOfIndexes[ind] = new Bucket<>();
+        }
         arrayOfIndexes[ind].add(myEntry);
     }
 
@@ -81,11 +83,19 @@ public class HashMap <K, V> {
         this.arrayOfIndexes = (Bucket<MyEntry<K, V>>[]) new Bucket[oldBucketArray.length * 2];
         HashMap<K, V> newMap = (HashMap<K, V>) new HashMap(oldBucketArray.length * 2);
         for (Bucket<MyEntry<K, V>> oldBucket : oldBucketArray) {
+            if (oldBucket == null) {
+                continue;
+            }
             ArrayList<MyEntry<K, V>> entryList = oldBucket.getEntries();
             for (MyEntry<K, V> entry : entryList) {
                 newMap.put(entry.getKey(), entry.getValue());
             }
         }
+        /*for (Bucket<MyEntry<K, V>> bucket : newMap.arrayOfIndexes) {
+            if(bucket == null) {
+                bucket = new Bucket<>();
+            }
+        }*/
         this.arrayOfIndexes = newMap.arrayOfIndexes;
     }
 
